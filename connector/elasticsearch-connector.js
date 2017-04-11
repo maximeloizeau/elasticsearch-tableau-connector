@@ -150,7 +150,8 @@ var elasticsearchConnector = (function () {
 
         var tableInfo = {
             id : connectionData.connectionName || "default",
-            columns : cols
+            columns : cols,
+            incrementColumnId: 'time'
         };
 
         schemaCallback([tableInfo]);
@@ -614,6 +615,12 @@ var elasticsearchConnector = (function () {
                 if(cb) cb(err);
                 return;
             }
+        }
+        else if(table.incrementValue) {
+            console.log("[openSearchScrollWindow] using incrementValue (" + table.incrementValue + ")");            
+            requestData = {
+                query: { range: { time: { gt: table.incrementValue } } }
+            };
         }
         else {
             requestData = {
