@@ -35,29 +35,15 @@
             </div>
         </div>
 
-        <div id="divMessage" class="row" style="display: none">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="alert alert-success">
-                    <p id="messageText"></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row no-tableau">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="alert alert-info">
-                    <p>Please open this URL from within Tableau</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row tableau">
+        <div class="row" data-bind="visible: loaded" style="display: none;">
             <div class="col-md-10 col-md-offset-1">
 
 
-                <div class="form-group">
+                <div class="form-group required" data-bind="css: { 'has-error': validation().connectionName, 'has-feedback': validation().connectionName }">
                     <label for="inputConnectionName">Connection Name</label>
                     <input class="form-control" id="inputConnectionName" placeholder="Enter unique name of Tableau Data Connection" data-bind="value: connectionName">
+                    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" data-bind="visible: validation().connectionName"></span>
+                    <span class="sr-only" data-bind="if: validation().connectionName">(error)</span>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -130,8 +116,8 @@
 
                     <div class="checkbox">
                         <label>
-              <input id="cbUseQuery" type="checkbox" data-bind="checked: useCustomQuery">Use custom query?
-            </label>
+                            <input id="cbUseQuery" type="checkbox" data-bind="checked: useCustomQuery">Use custom query?
+                        </label>
                     </div>
                     <div id="divQuery" class="form-group required" data-bind="visible: useCustomQuery">
                         <label for="textElasticsearchQuery">Query</label>
@@ -142,6 +128,23 @@
                         </div>
 
                     </div>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" data-bind="checked: useIncrementalRefresh">Use Incremental Refresh ?
+                            <i data-bind="bootstrapPopover" 
+                               class="glyphicon glyphicon-info-sign" 
+                               data-toggle="popover" data-trigger="hover" 
+                               title="Use Incremental Refresh"
+                               data-content="When checked, the connector will keep track of the last value for the 'Incremental Refresh Column'.  Subsequent extracts will use this last value as the starting value to retreive the next set of data.  Generally, the refresh column should be a date field, or auto-incrementing sequence or row number."></i>
+
+                        </label>
+                    </div>
+                    <div class="form-group required" data-bind="visible: useIncrementalRefresh">
+                        <label for="inputBatchSize">Incremental Refresh Column</label>
+                        <select class="form-control" data-bind="options: incrementalRefreshColumns, value: incrementalRefreshColumn, optionsText: 'name', optionsValue: 'name'"></select>
+                    </div>
+
                     <div class="form-group required">
                         <label for="inputBatchSize">Batch record size for each response</label>
                         <input type="number" class="form-control" id="inputBatchSize" placeholder="Batch size per request" min="1" data-bind="value: batchSize">
@@ -423,7 +426,7 @@
                     Preview
                 </button>
 
-                <button class="btn btn-primary" data-bind="click: submit">
+                <button class="btn btn-primary" data-bind="click: submit, visible: tableauInteractive">
                     Submit
                 </button>
 
