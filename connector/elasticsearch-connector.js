@@ -860,7 +860,13 @@ var elasticsearchConnector = (function () {
                     fieldName = toSafeTableauFieldName(field.name);
 
                     var fieldValue = getDeeplyNestedValue(hits[ii]._source, field.name);
-                    item[fieldName] = _.isNull(fieldValue) || _.isUndefined(fieldValue) ? null : fieldValue;
+
+                    if(_.isArray(fieldValue) && typeof fieldValue[0] === 'string') {
+                        item[fieldName] = fieldValue.join(',')
+                    }
+                    else {
+                        item[fieldName] = _.isNull(fieldValue) || _.isUndefined(fieldValue) ? null : fieldValue;                    
+                    }
 
                 });
 
