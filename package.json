@@ -1,0 +1,38 @@
+{
+  "name": "elasticsearch-tableau-connector",
+  "version": "1.0.0",
+  "description": "Tableau Web Data Connector for Elasticsearch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "install-service": "node_modules\\.bin\\winser -i -c",
+    "uninstall-service": "node_modules\\.bin\\winser -r -x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mradamlacey/elasticsearch-tableau-connector.git"
+  },
+  "author": "@mradamlacey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mradamlacey/elasticsearch-tableau-connector/issues"
+  },
+  "homepage": "https://github.com/mradamlacey/elasticsearch-tableau-connector",
+  "dependencies": {
+    "express": "^4.13.3",
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-express-server": "^0.5.1",
+    "grunt-parallel": "^0.4.1",
+    "load-grunt-tasks": "^3.2.0",
+    "winser": "^1.0.2"
+  },
+  "devDependencies": {
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.1",
+    "grunt-contrib-cssmin": "^0.14.0",
+    "grunt-contrib-uglify": "2.0.0",
+    "grunt-targethtml": "^0.2.6"
+  }
+}
