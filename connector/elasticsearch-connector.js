@@ -698,11 +698,11 @@ var elasticsearchConnector = (function () {
 
                     if(connectionData.allDatesAsLocalTime){
                         incrementValue = moment(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).toISOString();
+                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
                     }else{
                         // Parse as UTC time
                         incrementValue = moment.utc(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).toISOString();
+                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
                     }
 
                     
@@ -930,11 +930,11 @@ var elasticsearchConnector = (function () {
                     
                     if(connectionData.allDatesAsLocalTime){
                         item[fieldName] = moment(val.replace(' +', '+')
-                            .replace(' -', '-')).toISOString();
+                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
                     }else{
                          // Parse as UTC time
                          item[fieldName] = moment.utc(val.replace(' +', '+')
-                            .replace(' -', '-')).toISOString();
+                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
                     }
                     
                 });
@@ -1122,11 +1122,11 @@ var elasticsearchConnector = (function () {
                     var bucketValue;
                     if (field.indexOf("bucket_date_histogram_") == 0) {
                         if(connectionData.allDatesAsLocalTime){
-                            bucketValue = moment(bucket.key_as_string).toISOString();
+                            bucketValue = moment(bucket.key_as_string).format("YYYY-MM-DD HH:mm:ss.SSS");
                         }
                         else{
                             // Parse as UTC time
-                            bucketValue = moment.utc(bucket.key_as_string).toISOString();
+                            bucketValue = moment.utc(bucket.key_as_string).format("YYYY-MM-DD HH:mm:ss.SSS");
                         }
                         
                     }
