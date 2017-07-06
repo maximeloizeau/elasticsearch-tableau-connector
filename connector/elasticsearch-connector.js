@@ -698,19 +698,18 @@ var elasticsearchConnector = (function () {
 
                     if(connectionData.allDatesAsLocalTime){
                         incrementValue = moment(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
+                            .replace(' -', '-')).unix();
                     }else{
                         // Parse as UTC time
                         incrementValue = moment.utc(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
+                            .replace(' -', '-')).unix();
                     }
 
-                    
                 }else{
                     incrementValue = table.incrementValue;
                 }
                 var filter = { range: {} };
-                filter.range[connectionData.incrementalRefreshColumn] = { "gt": incrementValue };
+                filter.range[connectionData.incrementalRefreshColumn] = { "gt": incrementValue, "format": "epoch_millis" };
 
                 if (requestData.query == null) {
                     requestData.query = { bool: {} };
@@ -930,11 +929,11 @@ var elasticsearchConnector = (function () {
                     
                     if(connectionData.allDatesAsLocalTime){
                         item[fieldName] = moment(val.replace(' +', '+')
-                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
+                            .replace(' -', '-')).unix();
                     }else{
                          // Parse as UTC time
                          item[fieldName] = moment.utc(val.replace(' +', '+')
-                            .replace(' -', '-')).format("YYYY-MM-DD HH:mm:ss.SSS");
+                            .replace(' -', '-')).unix();
                     }
                     
                 });
@@ -1122,11 +1121,11 @@ var elasticsearchConnector = (function () {
                     var bucketValue;
                     if (field.indexOf("bucket_date_histogram_") == 0) {
                         if(connectionData.allDatesAsLocalTime){
-                            bucketValue = moment(bucket.key_as_string).format("YYYY-MM-DD HH:mm:ss.SSS");
+                            bucketValue = moment(bucket.key_as_string).unix();
                         }
                         else{
                             // Parse as UTC time
-                            bucketValue = moment.utc(bucket.key_as_string).format("YYYY-MM-DD HH:mm:ss.SSS");
+                            bucketValue = moment.utc(bucket.key_as_string).unix();
                         }
                         
                     }
