@@ -930,11 +930,11 @@ var elasticsearchConnector = (function () {
                     
                     if(connectionData.allDatesAsLocalTime){
                         item[fieldName] = moment(val.replace(' +', '+')
-                            .replace(' -', '-')).format('YYYY-MM-DD HH:mm:ss');
+                            .replace(' -', '-')).toISOString();
                     }else{
                          // Parse as UTC time
                          item[fieldName] = moment.utc(val.replace(' +', '+')
-                            .replace(' -', '-')).format('YYYY-MM-DD HH:mm:ss');
+                            .replace(' -', '-')).toISOString();
                     }
                     
                 });
@@ -1122,11 +1122,11 @@ var elasticsearchConnector = (function () {
                     var bucketValue;
                     if (field.indexOf("bucket_date_histogram_") == 0) {
                         if(connectionData.allDatesAsLocalTime){
-                            bucketValue = moment(bucket.key_as_string).format('YYYY-MM-DD HH:mm:ss');
+                            bucketValue = moment(bucket.key_as_string).toISOString();
                         }
                         else{
                             // Parse as UTC time
-                            bucketValue = moment.utc(bucket.key_as_string).format('YYYY-MM-DD HH:mm:ss');
+                            bucketValue = moment.utc(bucket.key_as_string).toISOString();
                         }
                         
                     }
