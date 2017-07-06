@@ -698,11 +698,11 @@ var elasticsearchConnector = (function () {
 
                     if(connectionData.allDatesAsLocalTime){
                         incrementValue = moment(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).format("YYYY-MM-DDTHH:mm:ss");
+                            .replace(' -', '-')).toISOString();
                     }else{
                         // Parse as UTC time
                         incrementValue = moment.utc(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).format("YYYY-MM-DDTHH:mm:ss");
+                            .replace(' -', '-')).toISOString();
                     }
 
                     
@@ -891,8 +891,12 @@ var elasticsearchConnector = (function () {
 
                     var fieldValue = getDeeplyNestedValue(hits[ii]._source, field.name);
 
+                    // If we have an array of string, we will join them with a comma
                     if(_.isArray(fieldValue) && typeof fieldValue[0] === 'string') {
-                        item[fieldName] = fieldValue.join(',')
+                        item[fieldName] = fieldValue.join(',');
+                    }
+                    else if(_.isArray(fieldValue) && typeof fieldValue[0] === 'object') {
+                        item[fieldName] = fieldValue[0].body || fieldValue[0].url || null;
                     }
                     else {
                         item[fieldName] = _.isNull(fieldValue) || _.isUndefined(fieldValue) ? null : fieldValue;                    
