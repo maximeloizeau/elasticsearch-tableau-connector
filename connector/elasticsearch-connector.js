@@ -889,25 +889,24 @@ var elasticsearchConnector = (function () {
 
                 // Copy over any formatted value to the source object
                 _.each(connectionData.dateFields, function (field) {
+                    fieldName = toSafeTableauFieldName(field);
 
-                    if (!item[field]) {
+                    if (!item[fieldName]) {
                         return;
                     }
 
-                    if( !_.isString(item[field])){
+                    if( !_.isString(item[fieldName])){
                         return;
                     }
 
                     val = null;
-                    if(_.isArray(item[field])){
-                        val = item[field][0]
+                    if(_.isArray(item[fieldName])){
+                        val = item[fieldName][0]
                     }
                     else{
-                        val = item[field]
+                        val = item[fieldName]
                     }
-                    
-                    fieldName = toSafeTableauFieldName(field);
-                    
+                                        
                     // convert dateField to String before calling .replace() on it
 				    val = val + ''; 
                     
