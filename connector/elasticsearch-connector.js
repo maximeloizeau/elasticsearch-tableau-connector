@@ -59,11 +59,16 @@ var elasticsearchConnector = (function () {
             return;
         }
 
-        elasticsearchFields.push({ name: name, dataType: elasticsearchTableauDataTypeMap[esType] });
-        elasticsearchFieldsMap[name] = { type: elasticsearchTableauDataTypeMap[esType], format: format };
-
+        // If we find a date, we convert it to timestamp which is an integer
         if (esType == 'date') {
             elasticsearchDateFields.push(name);
+
+            elasticsearchFields.push({ name: name, dataType: elasticsearchTableauDataTypeMap.integer });
+            elasticsearchFieldsMap[name] = { type: elasticsearchTableauDataTypeMap.integer, format: format };
+        }
+        else {
+            elasticsearchFields.push({ name: name, dataType: elasticsearchTableauDataTypeMap[esType] });
+            elasticsearchFieldsMap[name] = { type: elasticsearchTableauDataTypeMap[esType], format: format };
         }
 
         if (esType == 'geo_point') {
@@ -680,13 +685,6 @@ var elasticsearchConnector = (function () {
 
             if (table && table.incrementValue) {
 
-                var isDateField = _.find(connectionData.dateFields, function(field){
-                    if (field == connectionData.incrementalRefreshColumn){
-                        return true;
-                    }
-
-                    return false;
-                });
                 var incrementValue = "";
                 if(_.isArray(table.incrementValue)){
                     incrementValue = table.incrementValue.length > 0 ? table.incrementValue[0] : "";
@@ -694,20 +692,6 @@ var elasticsearchConnector = (function () {
                     incrementValue = table.incrementValue;
                 }
 
-                if(isDateField){
-
-                    if(connectionData.allDatesAsLocalTime){
-                        incrementValue = moment(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).unix();
-                    }else{
-                        // Parse as UTC time
-                        incrementValue = moment.utc(incrementValue.replace(' +', '+')
-                            .replace(' -', '-')).unix();
-                    }
-
-                }else{
-                    incrementValue = table.incrementValue;
-                }
                 var filter = { range: {} };
                 filter.range[connectionData.incrementalRefreshColumn] = { "gt": incrementValue, "format": "epoch_millis" };
 
@@ -929,11 +913,11 @@ var elasticsearchConnector = (function () {
                     
                     if(connectionData.allDatesAsLocalTime){
                         item[fieldName] = moment(val.replace(' +', '+')
-                            .replace(' -', '-')).unix();
+                            .replace(' -', '-')).valueOf();
                     }else{
                          // Parse as UTC time
                          item[fieldName] = moment.utc(val.replace(' +', '+')
-                            .replace(' -', '-')).unix();
+                            .replace(' -', '-')).valueOf();
                     }
                     
                 });
@@ -1121,11 +1105,11 @@ var elasticsearchConnector = (function () {
                     var bucketValue;
                     if (field.indexOf("bucket_date_histogram_") == 0) {
                         if(connectionData.allDatesAsLocalTime){
-                            bucketValue = moment(bucket.key_as_string).unix();
+                            bucketValue = moment(bucket.key_as_string).valueOf();
                         }
                         else{
                             // Parse as UTC time
-                            bucketValue = moment.utc(bucket.key_as_string).unix();
+                            bucketValue = moment.utc(bucket.key_as_string).valueOf();
                         }
                         
                     }
