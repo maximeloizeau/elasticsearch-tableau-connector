@@ -882,7 +882,7 @@ var elasticsearchConnector = (function () {
                     }
                     else if(_.isArray(fieldValue) && typeof fieldValue[0] === 'object' && fieldValue[0]) {
                         // Check if we are a Layer Message object
-                        if(!!fieldValue[0].body && !!fieldValue[0].mime_type) {
+                        if(!!fieldValue[0].mime_type) {
                             // Find all text parts and concat them into a string
                             item[fieldName + '_body'] = fieldValue
                                 .filter(function(field) { return field && field.mime_type === 'text/plain'; })
