@@ -878,8 +878,26 @@ var elasticsearchConnector = (function () {
                     if(_.isArray(fieldValue) && typeof fieldValue[0] === 'string') {
                         item[fieldName] = fieldValue.join(',');
                     }
-                    else if(_.isArray(fieldValue) && typeof fieldValue[0] === 'object') {
-                        item[fieldName] = fieldValue[0].body || fieldValue[0].url || null;
+                    else if(_.isArray(fieldValue) && typeof fieldValue[0] === 'object' && fieldValue[0]) {
+                        // Check if we are a Layer Message object
+                        if(!!fieldValue[0].body && !!fieldValue[0].mime_type) {
+                            // Find all text parts and concat them into a string
+                            item[fieldName + '_body'] = fieldValue
+                                .filter(function(field) { return field && field.mime_type === 'text/plain'; })
+                                .join('\n');
+                            item[fieldName + '_mimeType'] = fieldValue
+                                .map(function(field) { return field && field.mime_type; })
+                                .join(',');
+                            item[fieldName] = 'Layer message parts';
+                        }
+                        else if(fieldValue[0].url) {
+                            item[fieldName] = fieldValue
+                                .map(function(field) { return field && field.url; })
+                                .join(',');
+                        }
+                        else {
+                            item[fieldName] = null;
+                        }
                     }
                     else {
                         item[fieldName] = _.isNull(fieldValue) || _.isUndefined(fieldValue) ? null : fieldValue;                    
