@@ -874,6 +874,8 @@ var elasticsearchConnector = (function () {
 
                     var fieldValue = getDeeplyNestedValue(hits[ii]._source, field.name);
 
+                    if(item[fieldName] && !fieldValue) return;
+
                     // If we have an array of string, we will join them with a comma
                     if(_.isArray(fieldValue) && typeof fieldValue[0] === 'string') {
                         item[fieldName] = fieldValue.join(',');
@@ -884,8 +886,9 @@ var elasticsearchConnector = (function () {
                             // Find all text parts and concat them into a string
                             item[fieldName + '_body'] = fieldValue
                                 .filter(function(field) { return field && field.mime_type === 'text/plain'; })
+                                .map(function(field) { return field.body; })
                                 .join('\n');
-                            item[fieldName + '_mimeType'] = fieldValue
+                            item[fieldName + '_mime_type'] = fieldValue
                                 .map(function(field) { return field && field.mime_type; })
                                 .join(',');
                             item[fieldName] = 'Layer message parts';
