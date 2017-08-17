@@ -5,7 +5,7 @@ var elasticsearchConnector = (function () {
         keyword:  tableau.dataTypeEnum.string,
         text:  tableau.dataTypeEnum.string,
         float:  tableau.dataTypeEnum.float,
-        long:  tableau.dataTypeEnum.int,
+        long:  tableau.dataTypeEnum.float,
         integer:  tableau.dataTypeEnum.int,
         double:  tableau.dataTypeEnum.float,
         date:  tableau.dataTypeEnum.datetime,
